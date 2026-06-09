@@ -1,0 +1,1 @@
+# rimfrost-framework-erbjudande-topic-adapter
