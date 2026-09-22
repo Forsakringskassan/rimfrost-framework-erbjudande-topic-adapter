@@ -2,7 +2,7 @@
 
 Changelog of rimfrost-framework-erbjudande-topic-adapter.
 
-## 0.0.2 (2026-09-05)
+## 0.0.2 (2026-09-22)
 
 ### Bug Fixes
 
