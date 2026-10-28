@@ -2,6 +2,19 @@
 
 Changelog of rimfrost-framework-erbjudande-topic-adapter.
 
+## 0.0.3 (2026-10-28)
+
+### Bug Fixes
+
+-  Replace github workflows ([f8174](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/f81741f2cd5ca5c) Lars Persson)  
+-  **deps**  update dependency org.immutables:bom to v2.12.3 ([613a4](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/613a44bed78cad8) renovate[bot])  
+
+### Dependency updates
+
+- update forsakringskassan/.github digest to cbd74f1 ([ada69](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/ada69e679e9bc3b) renovate[bot])  
+- update forsakringskassan/.github digest to bfb01f7 ([ce27d](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/ce27dac9ec034a1) renovate[bot])  
+## rimfrost-1_2 (2026-09-22)
+
 ## 0.0.2 (2026-09-22)
 
 ### Bug Fixes
