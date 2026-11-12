@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-framework-erbjudande-topic-adapter.
 
+## 0.0.4 (2026-11-12)
+
+### Bug Fixes
+
+-  Add support for ignoring unknown json properties ([68647](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/6864753eeb55c1f) Lars Persson)  
+
+### Dependency updates
+
+- update forsakringskassan/.github digest to cbc0db8 ([467bf](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/467bf2f6de08c8b) renovate[bot])  
+- update forsakringskassan/.github digest to 625efb1 ([6e024](https://github.com/Forsakringskassan/rimfrost-framework-erbjudande-topic-adapter/commit/6e024942992e1fa) renovate[bot])  
 ## 0.0.3 (2026-10-28)
 
 ### Bug Fixes
