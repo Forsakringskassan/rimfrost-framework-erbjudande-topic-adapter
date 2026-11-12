@@ -9,10 +9,10 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.ServiceUnavailableException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import se.fk.rimfrost.erbjudande.kafka.topic.jaxrsspec.controllers.generatedsour
 import se.fk.rimfrost.framework.erbjudande.topic.exception.ErbjudandeTopicException;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 @ApplicationScoped
@@ -39,7 +40,8 @@ public class ErbjudandeTopicAdapter
    {
       ClientConfig clientConfig = new ClientConfig();
       clientConfig.connectorProvider(new ApacheConnectorProvider());
-      client = ClientBuilder.newClient(clientConfig);
+      clientConfig.register(AdapterObjectMapperProvider.class);
+      client = JerseyClientBuilder.newClient(clientConfig);
       erbjudandeTopicClient = WebResourceFactory.newResource(
             ErbjudandeTopicApi.class,
             client.target(this.erbjudandeTopicBaseUrl));
@@ -72,29 +74,41 @@ public class ErbjudandeTopicAdapter
 
          return topicResponse.getTopic();
       }
-      catch (NotFoundException ex)
-      {
-         var message = "Topic not found for erbjudande id: " + erbjudandeId;
-         LOGGER.error(message, ex);
-         throw new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.NOT_FOUND, message);
-      }
-      catch (BadRequestException ex)
-      {
-         var message = "Request was rejected as a bad request when attempting to fetch topic for erbjudande id: " + erbjudandeId;
-         LOGGER.error(message, ex);
-         throw new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.BAD_REQUEST, message);
-      }
-      catch (ServiceUnavailableException ex)
-      {
-         var message = "Request could not be handled by server";
-         LOGGER.error(message, ex);
-         throw new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.SERVICE_UNAVAILABLE, message);
-      }
-      catch (ProcessingException | WebApplicationException ex)
+      catch (ProcessingException ex)
       {
          var message = "An unexpected error occurred while fetching topic for erbjudande id: " + erbjudandeId;
          LOGGER.error(message, ex);
          throw new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.UNEXPECTED_ERROR, message, ex);
       }
+      catch (WebApplicationException ex)
+      {
+         throw toErbjudandeTopicException(ex, erbjudandeId);
+      }
+   }
+
+   private ErbjudandeTopicException toErbjudandeTopicException(WebApplicationException ex, String erbjudandeId)
+   {
+      return switch (ex.getResponse().getStatus()) {
+         case 400: {
+            var message = "Request was rejected as a bad request when attempting to fetch topic for erbjudande id: " + erbjudandeId;
+            LOGGER.error(message, ex);
+            yield new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.BAD_REQUEST, message);
+         }
+         case 404: {
+            var message = "Topic not found for erbjudande id: " + erbjudandeId;
+            LOGGER.error(message, ex);
+            yield new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.NOT_FOUND, message);
+         }
+         case 503: {
+            var message = "Request could not be handled by server";
+            LOGGER.error(message, ex);
+            yield new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.SERVICE_UNAVAILABLE, message);
+         }
+         default: {
+            var message = "An unexpected error occurred while fetching topic for erbjudande id: " + erbjudandeId;
+            LOGGER.error(message, ex);
+            yield new ErbjudandeTopicException(ErbjudandeTopicException.ErrorType.UNEXPECTED_ERROR, message, ex);
+         }
+      };
    }
 }

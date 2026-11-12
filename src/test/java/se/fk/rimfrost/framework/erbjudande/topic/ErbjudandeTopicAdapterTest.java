@@ -14,6 +14,7 @@ import se.fk.rimfrost.framework.erbjudande.topic.adapter.ErbjudandeTopicAdapter;
 import se.fk.rimfrost.framework.erbjudande.topic.exception.ErbjudandeTopicException;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -126,5 +127,15 @@ public class ErbjudandeTopicAdapterTest
    {
       var topic = erbjudandeTopicAdapter.getTopic(erbjudandeId);
       assertEquals("test", topic);
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "6e2077ac-2320-49dd-9ae7-c4a1c553f194"
+   })
+   public void should_ignore_unknown_property(@SkipInject String erbjudandeId)
+   {
+      assertDoesNotThrow(() -> erbjudandeTopicAdapter.getTopic(erbjudandeId));
    }
 }
